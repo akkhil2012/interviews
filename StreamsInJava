@@ -1,0 +1,127 @@
+package org.example;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+public class StreamExample {
+
+
+    public static void main(String[] args) {
+        System.out.println("Streams!");
+
+        Stream<Integer> stream = Stream.of(1,2,3,4);
+
+        // All APIS;
+        stream.filter(val -> val%2==0).collect(Collectors.toList())
+                .forEach(System.out::println);
+
+        System.out.println("<-------");
+        //IntStream stream1 = IntStream.of(11,22,44,55,53);
+        Stream<Integer> strStream = Stream.of(1,2,3111111,4,33335,6,7,8,9);
+        strStream.limit(3).forEach(System.out::println);
+
+
+
+        System.out.println("<-------");
+        IntStream intStream =
+        IntStream.rangeClosed(1,3);
+       // intStream.limit(3).forEach(System.out::println);
+
+        System.out.println("<-------");
+        //intStream.distinct().mapToObj(val -> val*val)
+          //      .collect(Collectors.toList()).forEach(System.out::println);
+
+        Function<Integer,Integer> function = a -> a*4;
+        intStream.mapToObj(val -> function.apply(val)).collect(Collectors.toList())
+                .forEach(System.out::println);
+
+
+
+        Map<Integer,Integer> mp = Map.of(11,111,22,222,33,333);
+        BiFunction<Integer,Integer,Integer> biFunction = (x,y) -> x*y;
+        System.out.println("<-------");
+        mp.entrySet().stream()
+                        .mapToInt(a -> biFunction.apply(a.getKey(),a.getValue()))
+                .forEach(System.out::println);
+
+
+        // Supplier in java
+        Supplier<Double> supplier = Math::random;
+        double randomNumer = supplier.get();
+        System.out.println("Supp " + randomNumer );
+
+
+        // Resourc emanagemenbt
+        System.out.println("<-------");
+        Supplier<Stream<String>> lineSTreamSupplier = () ->{
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            return Stream.of("test");
+        };
+
+        System.out.println("<-------");
+
+        Stream<Integer> st1 = Stream.of(1,2,3,4,5);
+       // st1.peek(System.out::println)
+         //       .collect(Collectors.toList()).forEach(System.out::println);
+
+      //  st1.reduce(0,(acc,num) -> acc+num);
+        System.out.println("<-------");
+        System.out.println(st1.reduce(0,(acc,num) -> acc+num));
+
+        List<Integer> lst = List.of(1,2,3,3,3,4,4,55,55,555,5555,555);
+
+
+        System.out.println("<---- Grouping By counting ---");
+        Map<Integer,List<Integer>> res = lst.stream().collect(Collectors.groupingBy(Function.identity()));
+
+
+        lst.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .forEach((w,c) -> System.out.println(w + ":" + c));
+
+
+        System.out.println("<---- Flat MA example....... ---");
+
+        List<List<String>> nestedLists = Arrays.asList(
+                Arrays.asList("apple", "banana"),
+                Arrays.asList("orange", "grape"),
+                Arrays.asList("kiwi", "melon")
+        );
+
+        nestedLists.stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList())
+                .forEach(val -> System.out.println(val));
+
+
+
+
+        //lst.stream().map(val -> Collectors.groupingBy(Function.identity()));
+
+
+      //  lst.stream().forEach(System.out::println);
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+}
